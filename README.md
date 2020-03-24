@@ -1,31 +1,28 @@
-# minesweeper-backend
-API test
+# minesweeper-frontend
 
-Backend REST api for Minesweeper game. Based on IBM Flask Python starter project: https://github.com/IBM/python-flask-app. The reason for using this project was I was optimistic about being able to implement more feature and project structure was suitable for having multiple services for game operations, data storage, time tracking and others
+Frontend react app for Minesweeper game. Used create-react-app project and material UI GridList. Responsiveness is not great but it works. I would rather made whole game logic on frontend to make it more responsive and use API to provide persistance , time tracking , and information about past games. 
 
-## Controllers
+https://minesweeper-hernanpepe.now.sh/
 
-Added minesweeper controller with 3 simple operations:
+App is deployed on now.sh since it's faster for react projects
 
-1. initialize: Initializes the board for the player to start working. 
-2. open: Takes the cell id as parameter. Opens the cell and updates the whole board according to minesweeper rules
-3. flag: Flags or unflags the cell
+## Usage
 
-## Model
+Game initializes on refresh:
 
-Game: Handles game variables. Manages two boards one for the values hidden and other to show to the player
-Board: Used to store the values under the hidden cells
-PlayerBoard: Used to store the values the player sees. Implements the basic operations for the user.
-Square: A cell in the board. Keeps the state accordingly
+1. Left click: opens the cell.
 
-Sizes for the boards are class attributes so they can be resized before instanciation. Should be used inside a service but there was no time for that.
+2. Right click: flags if cell is hidden. Unflags if cell is flagged.
+
+When mine is clicked opens the board completely. 
 
 ## Future work
 
-My focus was on having a deliverable according to expected. Since features were optional I prioritized deployment over the implementation of more features.
+I focused on backend API over clien because exercise is focus on python language
 
-1. Create service for handling games to allow multiple. Games use owner id in constructor so we could use it to retrieve the game for a specific player from the data storage in the future.
-2. Create services for time tracking and user managing
-3. Add persistence
+1. Add more feedback when game is over or won.
+2. Add user controls to restart
+3. Add game information (hidden squares/flags remaining)
+
 
 
