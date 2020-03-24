@@ -1,7 +1,7 @@
 import square from '../img/square.png';
 import flag from '../img/flag.png';
-import open from '../img/open.png';
 import mine from '../img/mine.png';
+import mine0 from '../img/open.png';
 import mine1 from '../img/1.png';
 import mine2 from '../img/2.png';
 import mine3 from '../img/3.png';
@@ -29,25 +29,25 @@ export class Cell {
         switch (image) {
             case 'flag':
                 return flag
-            case 'open':
-                return open
             case 'mine':
                 return mine
-            case '1':
+            case 'mine0':
+                return mine0
+            case 'mine1':
                 return mine1
-            case '2':
+            case 'mine2':
                 return mine2
-            case '3':
+            case 'mine3':
                 return mine3
-            case '4':
+            case 'mine4':
                 return mine4
-            case '5':
+            case 'mine5':
                 return mine5
-            case '6':
+            case 'mine6':
                 return mine6
-            case '7':
+            case 'mine7':
                 return mine7
-            case '8':
+            case 'mine8':
                 return mine8
             default:
                 return square

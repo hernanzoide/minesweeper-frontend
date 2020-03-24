@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { GridList, GridListTile , ListSubheader } from '@material-ui/core/';
+import { GridList, GridListTile } from '@material-ui/core/';
 import { Cell } from './model/Cell';
-import mine from './img/mine.png';
-import flag from './img/flag.png';
 import { Board } from './model/BoardDTO';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -52,10 +50,8 @@ export default function MineGrid() {
     </GridList>
   )
 
-  async function updateGrid(){
+  async function updateGrid(board: Board){
     let newCells : Cell[] = []
-    let response = await fetch('http://localhost:3020/minesweeper/initialize')
-    let board : Board = JSON.parse(await response.json())
     console.log(board)
     board.squares.forEach( (square) => {
       newCells.push(new Cell(square.id,square.image))
@@ -63,20 +59,21 @@ export default function MineGrid() {
     setCells(newCells);
   }
 
-  function handleClick(event: React.MouseEvent<HTMLImageElement>) {
+  async function handleClick(event: React.MouseEvent<HTMLImageElement>) {
     event.preventDefault()
+    let id = event.currentTarget.alt;
     if (event.nativeEvent.which === 1) {
-        open(+event.currentTarget.alt)
+        let board: Board = await open(+id)
         console.log('open '+event.currentTarget.alt)
-        updateGrid();
+        updateGrid(board);
     } else if (event.nativeEvent.which === 3) {
-        flag(+event.currentTarget.alt)
+        let board: Board = await flag(+id)
         console.log('flag '+event.currentTarget.alt)
-        updateGrid();
+        updateGrid(board);
     }
   }
 
-  async function open(id: number){
+  async function open(id: number): Promise<Board>{
     let response = await fetch('http://localhost:3020/minesweeper/'+id+'/open', {
       method: 'POST',
       headers: {
@@ -84,11 +81,11 @@ export default function MineGrid() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({a: 1, b: 'Textual content'})
-    });
-    const content = await response.json();
+    }); 
+    return JSON.parse(await response.json())
   }
 
-  async function flag(id :number){
+  async function flag(id :number): Promise<Board>{
     let response = await fetch('http://localhost:3020/minesweeper/'+id+'/flag', {
       method: 'POST',
       headers: {
@@ -97,6 +94,6 @@ export default function MineGrid() {
       },
       body: JSON.stringify({a: 1, b: 'Textual content'})
     });
-    const content = await response.json();
+    return JSON.parse(await response.json())
   }
 }
