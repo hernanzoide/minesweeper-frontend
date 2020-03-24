@@ -1,7 +1,7 @@
 {
-    "build": {
-      "env": {
-        "REACT_APP_BACKEND_URL": "@https://hernan-minesweeper-backend.mybluemix.net/minesweeper/"
-      }
+  "build": {
+    "env": {
+      "REACT_APP_BACKEND_URL": "@backend_url"
     }
   }
+}
