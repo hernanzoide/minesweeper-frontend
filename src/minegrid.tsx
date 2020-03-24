@@ -66,18 +66,18 @@ export default function MineGrid() {
   function handleClick(event: React.MouseEvent<HTMLImageElement>) {
     event.preventDefault()
     if (event.nativeEvent.which === 1) {
-        //open(+event.currentTarget.alt)
-        console.log('kaboom noob! '+event.currentTarget.alt)
+        open(+event.currentTarget.alt)
+        console.log('open '+event.currentTarget.alt)
         updateGrid();
     } else if (event.nativeEvent.which === 3) {
-        //flag(+event.currentTarget.alt)
-        console.log('safe '+event.currentTarget.alt)
+        flag(+event.currentTarget.alt)
+        console.log('flag '+event.currentTarget.alt)
         updateGrid();
     }
   }
 
   async function open(id: number){
-    let response = await fetch('http://localhost:3020/minesweeper/open', {
+    let response = await fetch('http://localhost:3020/minesweeper/'+id+'/open', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -89,7 +89,7 @@ export default function MineGrid() {
   }
 
   async function flag(id :number){
-    let response = await fetch('http://localhost:3020/minesweeper/flag', {
+    let response = await fetch('http://localhost:3020/minesweeper/'+id+'/flag', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
