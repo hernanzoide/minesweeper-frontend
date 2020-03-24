@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { GridList, GridListTile } from '@material-ui/core/';
 import { Cell } from './model/Cell';
@@ -29,16 +29,15 @@ export default function MineGrid() {
 
   const maxGridItems = 64
 
-  const [cells,setCells] = useState<Cell[]>(initTileData());
+  const [cells,setCells] = useState<Cell[]>([]);
 
-  function initTileData(){
-    let cells : Cell[] = []
-    for (var i = 0; i < maxGridItems; i++) {
-      let cell = new Cell(i,'square')
-      cells[i]= cell
-    }
-    return cells;
-  }
+  useEffect(() => {
+    (async () => { 
+      let response = await fetch(process.env.REACT_APP_BACKEND_URL+'initialize')
+      let board = JSON.parse(await response.json())
+      updateGrid(board)
+    })()
+  }, []);
 
   return (
     <GridList cellHeight={125} spacing={0} className={classes.gridList} cols={8}>
@@ -52,29 +51,31 @@ export default function MineGrid() {
 
   async function updateGrid(board: Board){
     let newCells : Cell[] = []
-    console.log(board)
     board.squares.forEach( (square) => {
       newCells.push(new Cell(square.id,square.image))
     })
     setCells(newCells);
   }
 
-  async function handleClick(event: React.MouseEvent<HTMLImageElement>) {
-    event.preventDefault()
-    let id = event.currentTarget.alt;
-    if (event.nativeEvent.which === 1) {
-        let board: Board = await open(+id)
-        console.log('open '+event.currentTarget.alt)
-        updateGrid(board);
-    } else if (event.nativeEvent.which === 3) {
-        let board: Board = await flag(+id)
-        console.log('flag '+event.currentTarget.alt)
-        updateGrid(board);
+  async function processClick(mouseButton: number, id: string) {
+    if (mouseButton === 1) {
+        let board: Board = await open(id)
+        updateGrid(board)
+    } else if (mouseButton === 3) {
+        let board: Board = await flag(id)
+        updateGrid(board)
     }
   }
 
-  async function open(id: number): Promise<Board>{
-    let response = await fetch('http://localhost:3020/minesweeper/'+id+'/open', {
+  function handleClick(event: React.MouseEvent<HTMLImageElement>) {
+    event.preventDefault()
+    let mouseButton = event.nativeEvent.which
+    let id = event.currentTarget.alt 
+    processClick(mouseButton,id)
+  }
+
+  async function open(id: string): Promise<Board>{
+    let response = await fetch(process.env.REACT_APP_BACKEND_URL+id+'/open', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -85,8 +86,8 @@ export default function MineGrid() {
     return JSON.parse(await response.json())
   }
 
-  async function flag(id :number): Promise<Board>{
-    let response = await fetch('http://localhost:3020/minesweeper/'+id+'/flag', {
+  async function flag(id :string): Promise<Board>{
+    let response = await fetch(process.env.REACT_APP_BACKEND_URL+id+'/flag', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
